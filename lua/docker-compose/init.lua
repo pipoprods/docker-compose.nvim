@@ -19,11 +19,26 @@ function M.file_exists(name)
 	end
 end
 
+-- Run through podman-compose if available, fallback to docker-compose
+local command = nil
+if vim.fn.executable("podman-compose") == 1 then
+	command = "podman-compose"
+else
+	if vim.fn.executable("docker-compose") == 1 then
+		command = "docker-compose"
+	end
+end
+
 -- Start services
 function M.up()
+	if command == nil then
+		vim.notify("docker-compose.nvim requires docker-compose or podman-compose to be installed", vim.log.levels.ERROR)
+		return
+	end
+
 	vim.notify("Starting containers...")
 
-	local t = Terminal:new({ cmd = "docker-compose up", hidden = false })
+	local t = Terminal:new({ cmd = command .. " up", hidden = false })
 	t:spawn()
 
 	state = "up"
@@ -33,7 +48,7 @@ end
 function M.down()
 	if state == STATES.UP then
 		print("Stopping containers...")
-		vim.cmd([[silent !docker-compose down]])
+		vim.cmd("silent !" .. command .. " down")
 		vim.cmd([[echon '']])
 		state = STATES.DOWN
 	end
@@ -43,7 +58,7 @@ end
 function M.kill()
 	if state == STATES.UP then
 		print("Killing containers...")
-		vim.cmd([[silent !docker-compose kill]])
+		vim.cmd("silent !" .. command .. " kill")
 		vim.cmd([[echon '']])
 		state = STATES.DOWN
 	end

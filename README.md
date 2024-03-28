@@ -7,6 +7,9 @@ This plugin will handle `docker-compose` based containers automatically:
 - start them when entering a directory with a `docker-compose` configuration
 - stop them when leaving a directory with a `docker-compose` configuration
 
+Containers are started through `podman-compose` if available, `docker-compose`
+otherwise.
+
 ## Installation
 
 [lazy.nvim](https://github.com/folke/lazy.nvim):
