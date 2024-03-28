@@ -41,7 +41,7 @@ function M.up()
 	local t = Terminal:new({ cmd = command .. " up", hidden = false })
 	t:spawn()
 
-	state = "up"
+	state = STATES.UP
 end
 
 -- Stop services
