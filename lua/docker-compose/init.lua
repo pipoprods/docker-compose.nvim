@@ -58,7 +58,7 @@ end
 function M.kill()
 	if state == STATES.UP then
 		print("Killing containers...")
-		vim.cmd("silent !" .. command .. " " .. (command == "docker-compose" and "kill" or "stop"))
+		vim.cmd("silent !" .. command .. " " .. (command == "docker-compose" and "kill" or "down -t 0"))
 		vim.cmd([[echon '']])
 		state = STATES.DOWN
 	end
